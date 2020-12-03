@@ -144,9 +144,14 @@ class BaseRobot:
                                            0,
                                            j)
                 ordered_joints.append(joints[joint_name])
+                print(joints[joint_name])
 
         if self.robot_body is None:
             raise Exception('robot body not initialized.')
+
+        print("Robot mass:", robot_mass)
+        for part in parts:
+            print(parts[part].body_part_index, parts[part].body_name)
 
         return parts, joints, ordered_joints, self.robot_body, robot_mass
 

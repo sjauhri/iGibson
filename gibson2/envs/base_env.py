@@ -106,6 +106,8 @@ class BaseEnv(gym.Env):
             robot = Fetch(self.config)
         elif self.config['robot'] == 'Locobot':
             robot = Locobot(self.config)
+        elif self.config['robot'] == 'Tiago_Single':
+            robot = Tiago_Single(self.config)
         elif self.config['robot'] == 'Tiago_Dual':
             robot = Tiago_Dual(self.config)
         else:

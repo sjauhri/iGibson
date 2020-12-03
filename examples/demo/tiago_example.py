@@ -1,4 +1,4 @@
-from gibson2.core.physics.robot_locomotors import Tiago_Dual
+from gibson2.core.physics.robot_locomotors import Fetch, Tiago_Single, Tiago_Dual
 from gibson2.utils.utils import parse_config
 import os
 import time
@@ -15,15 +15,22 @@ def main():
     p.loadMJCF(floor)
 
     robots = []
-    config = parse_config('../configs/tiago_p2p_nav.yaml')
+    config = parse_config('../configs/fetch_p2p_nav.yaml')
+    tiago = Fetch(config)
+    #robots.append(tiago)
+
+    config = parse_config('../configs/tiago_single_p2p_nav.yaml')
+    tiago = Tiago_Single(config)
+    robots.append(tiago)
+
+    config = parse_config('../configs/tiago_dual_p2p_nav.yaml')
     tiago = Tiago_Dual(config)
     robots.append(tiago)
 
     positions = [
-        [0, 0, 0],
-        [1, 0, 0],
-        [0, 1, 0],
-        [1, 1, 0]
+        #[0, 0, 0],
+        [1, 0, 1],
+        [0, 1, 1],
     ]
 
     for robot, position in zip(robots, positions):
@@ -32,13 +39,30 @@ def main():
         robot.robot_specific_reset()
         robot.keep_still()
 
-    for _ in range(2400):  # keep still for 10 seconds
+    secs = 2
+    print(f"Keep still for {secs} seconds")
+    for _ in range(240 * secs):
         p.stepSimulation()
         time.sleep(1./240.)
 
-    for _ in range(2400):  # move with small random actions for 10 seconds
+    secs = 30
+    print(f"Small movements for {secs} seconds")
+    for _ in range(240 * secs):  # move with small random actions for 10 seconds
         for robot, position in zip(robots, positions):
-            action = np.random.uniform(-1, 1, robot.action_dim)
+            #action = np.random.uniform(-1, 1, robot.action_dim)
+            action = np.zeros(robot.action_dim)
+            x = 0
+            y = robot.wheel_dim
+            action[x:y] = 0.1
+            x = y
+            y += robot.torso_lift_dim
+            action[x:y] = 0.2
+            x = y
+            y += robot.head_dim
+            action[x:y] = 0.3
+
+            #action[y+3] = 0.3
+
             robot.apply_action(action)
         p.stepSimulation()
         time.sleep(1./240.0)

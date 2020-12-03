@@ -12,7 +12,11 @@ robot: Tiago_Dual
 is_discrete: false
 wheel_velocity: 1.0
 torso_lift_velocity: 1.0
-arm_velocity: 1.0
+head_velocity: 0.8
+arm_left_velocity: 0.9
+arm_right_velocity: 0.9
+gripper_velocity: 1.0
+hand_velocity: 0.5
 
 # task, observation and action
 task: pointgoal # pointgoal|objectgoal|areagoal|reaching
