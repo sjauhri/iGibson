@@ -707,6 +707,9 @@ class Tiago_Single(LocomotorRobot):
         self.head_dim = 2
         self.arm_dim = 7
         self.gripper_dim = 2
+        self.rest_position = [0, 0, 0, 0, 0,
+                0, np.pi, -np.pi/2, 0, np.pi/2, 0, 0, 0,
+                0, 0]
 
         action_dim = self.wheel_dim + self.torso_lift_dim + self.head_dim\
                 + self.arm_dim + self.gripper_dim
@@ -757,8 +760,10 @@ class Tiago_Single(LocomotorRobot):
         set_joint_positions(robot_id, arm_joints, rest_position)
 
     def get_end_effector_position(self):
-        print(self.parts)
-        return self.parts['gripper_link'].get_position()
+        return self.parts['gripper_grasping_frame'].get_position()
+
+    def get_end_effector_index(self):
+        return self.parts['gripper_grasping_frame'].body_part_index
 
     def load(self):
         ids = super(Tiago_Single, self).load()
@@ -798,12 +803,17 @@ class Tiago_Dual(LocomotorRobot):
         self.arm_right_dim = 7
         self.gripper_dim = 2
         self.hand_dim = 0  # TODO
+        self.rest_position = [0, 0, 0, 0, 0,
+                                -np.pi/6, np.pi/2, 2*np.pi/3, np.pi/2, 0, -np.pi/3, 0,
+                                0, 0,
+                                -np.pi/6, np.pi/2, 2*np.pi/3, np.pi/2, 0, 0, 0
+                            ]
 
         action_dim = self.wheel_dim \
                 + self.torso_lift_dim + self.head_dim + self.arm_left_dim\
                 + self.arm_right_dim + self.gripper_dim + self.hand_dim
         LocomotorRobot.__init__(self,
-                                "tiago/tiago_dual.urdf",
+                                "tiago/tiago_dual_nohand.urdf",
                                 action_dim=action_dim,
                                 scale=config.get("robot_scale", 1.0),
                                 is_discrete=config.get("is_discrete", False),
@@ -833,33 +843,44 @@ class Tiago_Dual(LocomotorRobot):
         super(Tiago_Dual, self).robot_specific_reset()
 
         # roll the arm to its body
-        #robot_id = self.robot_ids[0]
-        #arm_joints = joints_from_names(robot_id,
-        #                               [
-        #                                   'torso_lift_joint',
-        #                                   'arm_left_1_joint',
-        #                                   'arm_left_2_joint',
-        #                                   'arm_left_3_joint',
-        #                                   'arm_left_4_joint',
-        #                                   'arm_left_5_joint',
-        #                                   'arm_left_6_joint',
-        #                                   'arm_left_7_joint',
-        #                                   'arm_right_1_joint',
-        #                                   'arm_right_2_joint',
-        #                                   'arm_right_3_joint',
-        #                                   'arm_right_4_joint',
-        #                                   'arm_right_5_joint',
-        #                                   'arm_right_6_joint',
-        #                                   'arm_right_7_joint',
-        #                               ])
+        robot_id = self.robot_ids[0]
+        torso_joints = joints_from_names(robot_id, ['head_1_joint', 'head_2_joint', 'torso_lift_joint'])
+        arm_left_joints = joints_from_names(robot_id,
+                                       [
+                                           'arm_left_1_joint',
+                                           'arm_left_2_joint',
+                                           'arm_left_3_joint',
+                                           'arm_left_4_joint',
+                                           'arm_left_5_joint',
+                                           'arm_left_6_joint',
+                                           'arm_left_7_joint',
+                                       ])
 
-        #rest_position = [0] * 15
+        arm_right_joints = joints_from_names(robot_id,
+                                       [
+                                           'arm_right_1_joint',
+                                           'arm_right_2_joint',
+                                           'arm_right_3_joint',
+                                           'arm_right_4_joint',
+                                           'arm_right_5_joint',
+                                           'arm_right_6_joint',
+                                           'arm_right_7_joint',
+                                       ])
 
-        #set_joint_positions(robot_id, arm_joints, rest_position)
+        rest_pos_torso = [-0.07, -0.80, 0.33]
+        rest_pos_left = [0.22, 0.48, 1.52, 1.76, 0.04, -0.49, 0]
+        #rest_pos_left = [-np.pi/6, np.pi/2, 2*np.pi/3, np.pi/2, 0, -np.pi/3, 0]
+        rest_pos_right = [-np.pi/6, np.pi/2, 2*np.pi/3, np.pi/2, 0, 0, 0]
+
+        set_joint_positions(robot_id, torso_joints, rest_pos_torso)
+        set_joint_positions(robot_id, arm_left_joints, rest_pos_left)
+        set_joint_positions(robot_id, arm_right_joints, rest_pos_right)
 
     def get_end_effector_position(self):
-        print(self.parts)
-        return self.parts['gripper_left_link'].get_position()
+        return self.parts['gripper_left_grasping_frame'].get_position()
+
+    def get_end_effector_index(self):
+        return self.parts['gripper_left_grasping_frame'].body_part_index
 
     def load(self):
         ids = super(Tiago_Dual, self).load()
