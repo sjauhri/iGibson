@@ -13,8 +13,8 @@ iGibson is a simulation environment providing fast visual rendering and physics 
 * `python -m gibson2.utils.assets_utils --download_ig_dataset`
 
 ### Installation for ROS ###
-* Add to ".bashrc": `export PYTHONPATH="$PYTHONPATH:<PATH_TO_IGIBSON>"`
-* Create catkin workspace: `mkdir ~/catkin_ws`
+* `export PYTHONPATH="$PYTHONPATH:<PATH_TO_IGIBSON>"` (add this line to ".bashrc" for auto export in future)
+* `mkdir ~/catkin_ws`
 * `cd <iGibson root>/gibson2`
 * `ln -s $PWD/examples/ros/gibson2-ros ~/catkin_ws/src/`
 * `cd ~/catkin_ws`
