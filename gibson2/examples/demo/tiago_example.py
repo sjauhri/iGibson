@@ -15,6 +15,8 @@ def main():
     floor = os.path.join(pybullet_data.getDataPath(), "mjcf/ground_plane.xml")
     p.loadMJCF(floor)
 
+
+    robots = []
     config = parse_config('../configs/tiago_single_point_nav.yaml')
     tiago = Tiago_Single(config)
     robots.append(tiago)
