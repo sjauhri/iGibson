@@ -23,6 +23,9 @@ class Tiago_Single(LocomotorRobot):
                 0, np.pi, -np.pi/2, 0, np.pi/2, 0, 0, 0,
                 0, 0]
 
+        self.problem_parts = []  # filled on load
+        self.joint_mask = []  # filled on load
+
         action_dim = self.wheel_dim + self.torso_lift_dim + self.head_dim\
                 + self.arm_dim + self.gripper_dim
         LocomotorRobot.__init__(self,
@@ -83,16 +86,19 @@ class Tiago_Single(LocomotorRobot):
 
         # get problematic links
         moving_parts = ["arm", "gripper", "wrist", "hand"]
-        problem_links = []
         for part in self.parts:
-            idx = self.parts[part].body_part_index
             for x in moving_parts:
-                if not x in part:
-                    problem_links.append(idx)
+                if x not in part:
+                    self.problem_parts.append(self.parts[part])
 
         # disable self collision
-        for a in problem_links:
-            for b in problem_links:
-                p.setCollisionFilterPair(robot_id, robot_id, a, b, 0)
+        for a in self.problem_parts:
+            for b in self.problem_parts:
+                p.setCollisionFilterPair(robot_id, robot_id, a.body_part_index, b.body_part_index, 0)
+
+        # calculate joint mask
+        all_joints = get_movable_joints(robot_id)
+        valid_joints = [j.joint_index for j in self.ordered_joints]
+        self.joint_mask = [j in valid_joints for j in all_joints]
 
         return ids

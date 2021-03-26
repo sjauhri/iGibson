@@ -71,7 +71,7 @@ class MotionPlanningWrapper(object):
         if self.env.simulator.viewer is not None:
             self.env.simulator.viewer.setup_motion_planner(self)
 
-        if self.robot_type in ['Fetch', 'Movo']:
+        if self.robot_type in ['Fetch', 'Movo', "Tiago_Single", "Tiago_Dual"]:
             self.setup_arm_mp()
 
         self.arm_interaction_length = 0.2
@@ -156,6 +156,42 @@ class MotionPlanningWrapper(object):
                                                     "right_wrist_spherical_2_joint",
                                                     "right_wrist_3_joint",
                                                     ])
+        elif self.robot_type == 'Tiago_Single':
+            self.arm_default_joint_positions = (0, np.pi, -np.pi / 2, 0, np.pi / 2, 0, 0, 0)
+            self.arm_joint_ids = joints_from_names(self.robot_id,
+                                                   [
+                                                       'torso_lift_joint',
+                                                       'arm_1_joint',
+                                                       'arm_2_joint',
+                                                       'arm_3_joint',
+                                                       'arm_4_joint',
+                                                       'arm_5_joint',
+                                                       'arm_6_joint',
+                                                       'arm_7_joint',
+                                                   ])
+        elif self.robot_type == 'Tiago_Dual':
+            self.arm_default_joint_positions = (0.33, 0.22, 0.48, 1.52, 1.76, 0.04, -0.49, 0, -np.pi / 6, np.pi / 2, 2 * np.pi / 3, np.pi / 2, 0, 0, 0)
+            self.arm_joint_ids = joints_from_names(self.robot_id,
+                                                   [
+                                                       'torso_lift_joint',
+                                                       'arm_left_1_joint',
+                                                       'arm_left_2_joint',
+                                                       'arm_left_3_joint',
+                                                       'arm_left_4_joint',
+                                                       'arm_left_5_joint',
+                                                       'arm_left_6_joint',
+                                                       'arm_left_7_joint',
+                                                       'arm_right_1_joint',
+                                                       'arm_right_2_joint',
+                                                       'arm_right_3_joint',
+                                                       'arm_right_4_joint',
+                                                       'arm_right_5_joint',
+                                                       'arm_right_6_joint',
+                                                       'arm_right_7_joint',
+                                                   ])
+            all_joints = get_movable_joints(self.robot_id)
+            self.joint_mask = [j in self.arm_joint_ids for j in all_joints]
+
         self.arm_joint_ids_all = get_moving_links(
             self.robot_id, self.arm_joint_ids)
         self.arm_joint_ids_all = [item for item in self.arm_joint_ids_all if
@@ -264,7 +300,7 @@ class MotionPlanningWrapper(object):
             joint_range = [item + 1 for item in joint_range]
             joint_damping = [0.1 for _ in joint_range]
 
-        elif self.robot_type == 'Movo':
+        else:
             max_limits = get_max_limits(self.robot_id, self.robot.all_joints)
             min_limits = get_min_limits(self.robot_id, self.robot.all_joints)
             rest_position = list(get_joint_positions(
@@ -278,7 +314,7 @@ class MotionPlanningWrapper(object):
             joint_range, joint_damping
         )
 
-    def get_arm_joint_positions(self, arm_ik_goal):
+    def get_arm_joint_positions(self, arm_ik_goal, arm_index=0):
         """
         Attempt to find arm_joint_positions that satisfies arm_subgoal
         If failed, return None
@@ -320,6 +356,15 @@ class MotionPlanningWrapper(object):
                 arm_joint_positions = arm_joint_positions[2:10]
             elif self.robot_type == 'Movo':
                 arm_joint_positions = arm_joint_positions[:8]
+            elif self.robot_type == "Tiago_Single":
+                arm_joint_positions = np.asarray(arm_joint_positions)[self.joint_mask]
+                arm_joint_positions = arm_joint_positions[:8]
+            elif self.robot_type == "Tiago_Dual":
+                arm_joint_positions = np.asarray(arm_joint_positions)[self.joint_mask]
+                if arm_index == 0:  # left arm
+                    arm_joint_positions = arm_joint_positions[0] + arm_joint_positions[1:8]
+                elif arm_index == 1:  # right arm
+                    arm_joint_positions = arm_joint_positions[0] + arm_joint_positions[8:]
 
             set_joint_positions(
                 self.robot_id, self.arm_joint_ids, arm_joint_positions)
@@ -435,6 +480,9 @@ class MotionPlanningWrapper(object):
                 (link_from_name(self.robot_id, 'left_arm_half_1_link'),
                  link_from_name(self.robot_id, 'linear_actuator_fixed_link')),
             }
+        elif self.robot_type in ["Tiago_Single", "Tiago_Dual"]:
+            disabled_collisions = {(link_from_name(self.robot_id, a.body_name),
+                                    link_from_name(self.robot_id, b.body_name) for a, b in self.robot.problem_parts)}
 
         if self.fine_motion_plan:
             self_collisions = True
