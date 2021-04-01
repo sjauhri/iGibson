@@ -481,8 +481,8 @@ class MotionPlanningWrapper(object):
                  link_from_name(self.robot_id, 'linear_actuator_fixed_link')),
             }
         elif self.robot_type in ["Tiago_Single", "Tiago_Dual"]:
-            disabled_collisions = {(link_from_name(self.robot_id, a.body_name),
-                                    link_from_name(self.robot_id, b.body_name) for a, b in self.robot.problem_parts)}
+            disabled_collisions = {((link_from_name(self.robot_id, a.body_name),
+                                    link_from_name(self.robot_id, b.body_name)) for a, b in self.robot.problem_parts)}
 
         if self.fine_motion_plan:
             self_collisions = True

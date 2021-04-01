@@ -1,6 +1,8 @@
 # scene
-scene: building
+scene: stadium
 model_id: Rs
+#scene: igibson
+#scene_id: Rs_int
 is_interactive: false
 build_graph: true
 load_texture: true
