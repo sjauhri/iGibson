@@ -18,6 +18,7 @@ from gibson2.external.pybullet_tools.utils import set_base_values_with_z
 from gibson2.external.pybullet_tools.utils import get_base_values
 from gibson2.external.pybullet_tools.utils import plan_base_motion_2d
 from gibson2.external.pybullet_tools.utils import get_moving_links
+from gibson2.external.pybullet_tools.utils import get_movable_joints
 from gibson2.external.pybullet_tools.utils import is_collision_free
 
 from gibson2.utils.utils import rotate_vector_2d, rotate_vector_3d
@@ -481,8 +482,8 @@ class MotionPlanningWrapper(object):
                  link_from_name(self.robot_id, 'linear_actuator_fixed_link')),
             }
         elif self.robot_type in ["Tiago_Single", "Tiago_Dual"]:
-            disabled_collisions = {(link_from_name(self.robot_id, a.body_name),
-                                    link_from_name(self.robot_id, b.body_name) for a, b in self.robot.problem_parts)}
+            disabled_collisions = {((link_from_name(self.robot_id, a.body_name),
+                                    link_from_name(self.robot_id, b.body_name)) for a, b in self.robot.problem_parts)}
 
         if self.fine_motion_plan:
             self_collisions = True

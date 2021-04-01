@@ -2,7 +2,7 @@ import gym
 import numpy as np
 import pybullet as p
 
-from gibson2.external.pybullet_tools.utils import joints_from_names, set_joint_positions
+from gibson2.external.pybullet_tools.utils import joints_from_names, set_joint_positions, get_movable_joints
 from gibson2.robots.robot_locomotor import LocomotorRobot
 
 
@@ -102,7 +102,7 @@ class Tiago_Dual(LocomotorRobot):
     def get_end_effector_position(self):
         return self.parts['gripper_left_grasping_frame'].get_position()
 
-    def get_end_effector_index(self):
+    def end_effector_part_index(self):
         return self.parts['gripper_left_grasping_frame'].body_part_index
 
     def load(self):

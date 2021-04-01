@@ -114,7 +114,8 @@ class InteractiveIndoorScene(StaticIndoorScene):
         self.scene_instance_folder = os.path.join(
             gibson2.ig_dataset_path, "scene_instances",
             '{}_{}_{}'.format(timestr, random.getrandbits(64), os.getpid()))
-        os.makedirs(self.scene_instance_folder, exist_ok=True)
+        if not os.path.exists(self.scene_instance_folder):
+            os.makedirs(self.scene_instance_folder)#, exist_ok=True)
 
         # Load room semantic and instance segmentation map
         self.load_room_sem_ins_seg_map(seg_map_resolution)
