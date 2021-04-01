@@ -176,6 +176,9 @@ class BaseEnv(gym.Env):
             if first_n != -1:
                 scene._set_first_n_objects(first_n)
             self.simulator.import_ig_scene(scene)
+        else:
+            raise Exception(
+                'unknown scene type: {}'.format(self.config['scene']))
 
         if self.config['robot'] == 'Turtlebot':
             robot = Turtlebot(self.config)
@@ -195,6 +198,10 @@ class BaseEnv(gym.Env):
             robot = Fetch(self.config)
         elif self.config['robot'] == 'Locobot':
             robot = Locobot(self.config)
+        elif self.config['robot'] == 'Tiago_Single':
+            robot = Tiago_Single(self.config)
+        elif self.config['robot'] == 'Tiago_Dual':
+            robot = Tiago_Dual(self.config)
         else:
             raise Exception(
                 'unknown robot type: {}'.format(self.config['robot']))
