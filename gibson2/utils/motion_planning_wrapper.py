@@ -190,8 +190,8 @@ class MotionPlanningWrapper(object):
                                                        'arm_right_6_joint',
                                                        'arm_right_7_joint',
                                                    ])
-            all_joints = get_movable_joints(self.robot_id)
-            self.joint_mask = [j in self.arm_joint_ids for j in all_joints]
+            self.all_joints = get_movable_joints(self.robot_id)
+            self.joint_mask = [j in self.arm_joint_ids for j in self.all_joints]
 
         self.arm_joint_ids_all = get_moving_links(
             self.robot_id, self.arm_joint_ids)
@@ -302,10 +302,10 @@ class MotionPlanningWrapper(object):
             joint_damping = [0.1 for _ in joint_range]
 
         else:
-            max_limits = get_max_limits(self.robot_id, self.robot.all_joints)
-            min_limits = get_min_limits(self.robot_id, self.robot.all_joints)
+            max_limits = get_max_limits(self.robot_id, self.all_joints)
+            min_limits = get_min_limits(self.robot_id, self.all_joints)
             rest_position = list(get_joint_positions(
-                self.robot_id, self.robot.all_joints))
+                self.robot_id, self.all_joints))
             joint_range = list(np.array(max_limits) - np.array(min_limits))
             joint_range = [item + 1 for item in joint_range]
             joint_damping = [0.1 for _ in joint_range]
