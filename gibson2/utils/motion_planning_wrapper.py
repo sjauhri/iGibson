@@ -353,6 +353,7 @@ class MotionPlanningWrapper(object):
                 solver=p.IK_DLS,
                 maxNumIterations=100)
 
+            arm_joint_indices = self.arm_joint_ids
             if self.robot_type == 'Fetch':
                 arm_joint_positions = arm_joint_positions[2:10]
             elif self.robot_type == 'Movo':
@@ -363,12 +364,14 @@ class MotionPlanningWrapper(object):
             elif self.robot_type == "Tiago_Dual":
                 arm_joint_positions = np.asarray(arm_joint_positions)[self.joint_mask]
                 if arm_index == 0:  # left arm
-                    arm_joint_positions = arm_joint_positions[0] + arm_joint_positions[1:8]
+                    arm_joint_positions = np.append(arm_joint_positions[0], arm_joint_positions[1:8])
+                    arm_joint_indices = np.append([0], np.arange(1, 8))
                 elif arm_index == 1:  # right arm
-                    arm_joint_positions = arm_joint_positions[0] + arm_joint_positions[8:]
+                    arm_joint_positions = np.append(arm_joint_positions[0], arm_joint_positions[8:])
+                    arm_joint_indices = np.append([0], np.arange(8, len(arm_joint_positions)))
 
             set_joint_positions(
-                self.robot_id, self.arm_joint_ids, arm_joint_positions)
+                self.robot_id, arm_joint_indices, arm_joint_positions)
 
             dist = l2_distance(
                 self.robot.get_end_effector_position(), arm_ik_goal)
