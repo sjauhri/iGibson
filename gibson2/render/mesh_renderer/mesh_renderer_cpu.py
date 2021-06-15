@@ -442,6 +442,9 @@ class MeshRenderer(object):
                 # Rotate the shape after they are scaled
                 orn = quat2rotmat(xyzw2wxyz(transform_orn))
                 shape_vertex = shape_vertex.dot(orn[:3, :3].T)
+                # Also rotate the surface normal, note that tangent space does not need to be rotated since they
+                # are derived from shape_vertex
+                shape_normal = shape_normal.dot(orn[:3, :3].T)
             if transform_pos is not None:
                 # Translate the shape after they are scaled
                 shape_vertex += np.array(transform_pos)
@@ -768,6 +771,11 @@ class MeshRenderer(object):
         # run optimization process the first time render is called
         if self.optimized and not self.optimization_process_executed:
             self.optimize_vertex_and_texture()
+
+        if 'seg' in modes and self.rendering_settings.msaa:
+            logging.warning(
+                "Rendering segmentation masks with MSAA on may generate interpolation artifacts. "
+                "It is recommended to turn MSAA off when rendering segmentation.")
 
         render_shadow_pass = render_shadow_pass and 'rgb' in modes
         need_flow_info = 'optical_flow' in modes or 'scene_flow' in modes
