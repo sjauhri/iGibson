@@ -12,6 +12,12 @@ iGibson is a simulation environment providing fast visual rendering and physics 
 * `python -m gibson2.utils.assets_utils --download_demo_data`
 * `python -m gibson2.utils.assets_utils --download_ig_dataset`
 
+
+### Run Tiago example ###
+* `cd gibson2/examples/demo`
+* `python tiago_dual_ik.py`
+
+
 ### Installation for ROS ###
 * `export PYTHONPATH="$PYTHONPATH:<PATH_TO_IGIBSON>"` (add this line to ".bashrc" for auto export in future)
 * `mkdir ~/catkin_ws`

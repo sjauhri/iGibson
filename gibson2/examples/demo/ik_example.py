@@ -10,6 +10,7 @@ from gibson2.external.pybullet_tools.utils import set_joint_positions, joints_fr
 
 import numpy as np
 import gibson2
+import os
 
 def main():
     config = parse_config(os.path.join(gibson2.example_config_path, 'fetch_reaching.yaml'))

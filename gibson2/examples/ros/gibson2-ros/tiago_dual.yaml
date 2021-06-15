@@ -1,6 +1,5 @@
 # scene
-scene: building
-model_id: Rs
+scene: stadium
 is_interactive: false
 build_graph: true
 load_texture: true
@@ -43,7 +42,7 @@ max_collisions_allowed: 500
 goal_format: polar
 
 # sensor spec
-output: [sensor, rgb, depth, scan]
+output: [sensor, rgb, depth] #, scan]
 # image
 # Primesense Carmine 1.09 short-range RGBD sensor
 # http://xtionprolive.com/primesense-carmine-1.09

@@ -92,7 +92,7 @@ def main():
             maxIter = 100
             joint_pos = accurateCalculateInverseKinematics(
                 robot_id,
-                tiago.get_end_effector_index(),
+                tiago.end_effector_part_index(),
                 #tiago.parts['gripper_link'].body_part_index,
                 [x, y, z],
                 threshold,

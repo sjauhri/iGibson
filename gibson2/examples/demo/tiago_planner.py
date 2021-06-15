@@ -14,7 +14,7 @@ target_pos = [0.6,0.2,0.8]
 target_orn = [0,0,-1]
 
 def main():
-    config_filename = os.path.join(gibson2.example_config_path, 'tiago_reaching_mod.yaml')
+    config_filename = os.path.join(gibson2.example_config_path, 'tiago_dual_point_nav.yaml')
     env = iGibsonEnv(config_file=config_filename, mode='gui')
     #Load Motion Planner
     motion_planner = MotionPlanningWrapper(env)
