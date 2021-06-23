@@ -179,8 +179,8 @@ def download_assets():
     if not os.path.exists(gibson2.assets_path):
         os.system(
             'wget -c --retry-connrefused --tries=5 --timeout=5 '
-            'https://storage.googleapis.com/gibson_scenes/assets_igibson.tar.gz -O ~/tmp/assets_igibson.tar.gz')
-        os.system('tar -zxf ~/tmp/assets_igibson.tar.gz --directory {}'.format(
+            'https://storage.googleapis.com/gibson_scenes/assets_igibson.tar.gz -O /tmp/assets_igibson.tar.gz')
+        os.system('tar -zxf /tmp/assets_igibson.tar.gz --directory {}'.format(
             os.path.dirname(gibson2.assets_path)))
 
 
@@ -194,9 +194,9 @@ def download_demo_data():
     if not os.path.exists(os.path.join(gibson2.g_dataset_path, 'Rs')):
         os.system(
             'wget -c --retry-connrefused --tries=5 --timeout=5  '
-            'https://storage.googleapis.com/gibson_scenes/Rs.tar.gz -O ~/tmp/Rs.tar.gz')
+            'https://storage.googleapis.com/gibson_scenes/Rs.tar.gz -O /tmp/Rs.tar.gz')
         os.system(
-            'tar -zxf ~/tmp/Rs.tar.gz --directory {}'.format(gibson2.g_dataset_path))
+            'tar -zxf /tmp/Rs.tar.gz --directory {}'.format(gibson2.g_dataset_path))
 
 
 def download_dataset(url):
@@ -208,9 +208,9 @@ def download_dataset(url):
 
     file_name = url.split('/')[-1]
     os.system(
-        'wget -c --retry-connrefused --tries=5 --timeout=5 {} -O ~/tmp/{}'.format(url, file_name))
+        'wget -c --retry-connrefused --tries=5 --timeout=5 {} -O /tmp/{}'.format(url, file_name))
     os.system(
-        'tar -zxf ~/tmp/{} --strip-components=1 --directory {}'.format(file_name, gibson2.g_dataset_path))
+        'tar -zxf /tmp/{} --strip-components=1 --directory {}'.format(file_name, gibson2.g_dataset_path))
     # These datasets come as folders; in these folder there are scenes, so --strip-components are needed.
 
 def download_ext_scene_assets():
@@ -219,17 +219,17 @@ def download_ext_scene_assets():
     url = "https://storage.googleapis.com/gibson_scenes/default_materials.tar.gz"
     file_name = url.split('/')[-1]
     os.system(
-        'wget -c --retry-connrefused --tries=5 --timeout=5 {} -O ~/tmp/{}'.format(url, file_name))
-    os.system( 'tar -zxf ~/tmp/{} --directory {}'.format(
+        'wget -c --retry-connrefused --tries=5 --timeout=5 {} -O /tmp/{}'.format(url, file_name))
+    os.system( 'tar -zxf /tmp/{} --directory {}'.format(
                file_name, gibson2.cubicasa_dataset_path))
-    os.system( 'tar -zxf ~/tmp/{} --directory {}'.format(
+    os.system( 'tar -zxf /tmp/{} --directory {}'.format(
                file_name, gibson2.threedfront_dataset_path))
 
     url = "https://storage.googleapis.com/gibson_scenes/threedfront_urdfs.tar.gz"
     file_name = url.split('/')[-1]
     os.system(
-        'wget -c --retry-connrefused --tries=5 --timeout=5 {} -O ~/tmp/{}'.format(url, file_name))
-    os.system( 'tar -zxf ~/tmp/{} --directory {}'.format(
+        'wget -c --retry-connrefused --tries=5 --timeout=5 {} -O /tmp/{}'.format(url, file_name))
+    os.system( 'tar -zxf /tmp/{} --directory {}'.format(
                file_name, gibson2.threedfront_dataset_path))
 
 def download_ig_dataset():
@@ -244,9 +244,9 @@ def download_ig_dataset():
     url = "https://storage.googleapis.com/gibson_scenes/ig_dataset.tar.gz"
     file_name = url.split('/')[-1]
     os.system(
-        'wget -c --retry-connrefused --tries=5 --timeout=5 {} -O ~/tmp/{}'.format(url, file_name))
+        'wget -c --retry-connrefused --tries=5 --timeout=5 {} -O /tmp/{}'.format(url, file_name))
     os.system(
-        'tar -zxf ~/tmp/{} --strip-components=1 --directory {}'.format(file_name, gibson2.ig_dataset_path))
+        'tar -zxf /tmp/{} --strip-components=1 --directory {}'.format(file_name, gibson2.ig_dataset_path))
     # These datasets come as folders; in these folder there are scenes, so --strip-components are needed.
 
 def change_data_path():
